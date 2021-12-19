@@ -45,6 +45,21 @@ or delete posts
 - User model
 | key        | type            | options          | default value |
 | ---------- | --------------- | ---------------- | ------------- |
+| name       | String          | required, unique | n/a           |
+| email      | String          | required, unique | n/a           |
+| password   | String          | required         | n/a           |
+| roles      | Schema <roles>  | required         | n/a           |
+| isBocked   | Boolean         |                  | false         |
+| headline   | String          |                  | n/a           |
+| about      | String          |                  | n/a           |
+| course     | Schema <course> |                  | n/a           |
+| enrole     | Schema <course> |                  | N/A           |
+| lessons    | Array           |                  | N/A           |
+| isVerified | Boolean         |                  | false         |
+
+
+| key        | type            | options          | default value |
+| ---------- | --------------- | ---------------- | ------------- |
 | username       | String          | required | N/A     |
 | password   | String          | required         | N/A    |
 | roles      | String  |    N/A   | 'user'    |
