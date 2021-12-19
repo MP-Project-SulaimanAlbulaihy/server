@@ -32,7 +32,7 @@ or delete posts
 ## ER Diagram
 ![masterpice backend UML](https://i.ibb.co/hc3nHDh/uml12-drawio-1.png)
 
-## used library
+## Used Library
 - express
 - cors
 - morgan
