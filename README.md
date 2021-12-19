@@ -32,5 +32,72 @@ or delete posts
 ## ER Diagram
 ![masterpice backend UML](https://i.ibb.co/hc3nHDh/uml12-drawio-1.png)
 
+## used library
+- express
+- cors
+- morgan
+- dotenv
+- mongoose
+- bcrypt
+- jsonwebtoken
+
+## Models
+- User model
+| key        | type            | options          | default value |
+| ---------- | --------------- | ---------------- | ------------- |
+| username       | String          | required | N/A     |
+| password   | String          | required         | N/A    |
+| roles      | String  |    N/A   | 'user'    |
+| isDel   | Boolean         |    N/A   | false         |
+| avatar   | String          |    N/A     | N/A  |
+| borrowed      | Schema <Borrowed>          |     N/A    | N/A      |
+| favourite     | Schema <Favourite> |    N/A      | N/A      |
+| post     | Schema <Post> |   N/A      | N/A      |
+| timestamp    | true           |     N/A    | N/A   |
+
+- Post model
+| key         | type              | options  | default value |
+| ----------- | ----------------- | -------- | ------------- |
+| title       | String            | required | N/A      |
+| duration       | Number            | N/A | N/A     |
+| desc | String            | required | N/A       |
+| timestamp | true            | N/A | N/A       |
+| user     | Schema <User>     | required | N/A          |
+| category    | String            | required | N/A          |
+| rating    | Number            | N/A | N/A         |
+| comment    | Schema <Comment>  |   N/A    | N/A     |
+| like     | Schema <Like>   |    N/A   | N/A          |
+| img   | String|          | N/A           |
+| isDeleted    | Boolean           |    N/A      | false         |
+
+- comments model
+| key         | type            | options  | default value |
+| ----------- | --------------- | -------- | ------------- |
+| user     | Schema <user>   | required | N/A           |
+| comment | String          | required | N/A           |
+| post   | Schema <Post> | required | N/A           |
+| timestamp    | true         |    N/A      | N/A         |
+
+- favourite model
+| key         | type            | options  | default value |
+| ----------- | --------------- | -------- | ------------- |
+| user     | Schema <User>   | required | N/A          |
+| post | Schema <Post>          | required | N/A           |
+| timestamp      | true          | N/A | N/A           |
+
+- Like model
+| key         | type            | options  | default value |
+| ----------- | --------------- | -------- | ------------- |
+| user     | Schema <User>   | required | N/A          |
+| post   | Schema <Post> | required | N/A           |
+| timestamp    | true         |     N/A     | N/A         |
+
+- Chat model
+| key      | type             | options  | default value |
+| -------- | ---------------- | -------- | ------------- |
+| user    | Schema <User>    | required | N/A           |
+| messages | array of objects | required | N/A           |
+ 
+ 
 ## Trello: 
 [https://trello.com/b/1qm6ACeN/master-piece-project](https://trello.com/b/1qm6ACeN/master-piece-project)
