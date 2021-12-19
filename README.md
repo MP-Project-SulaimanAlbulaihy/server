@@ -26,7 +26,7 @@ or delete posts
  - able to edit/delete all posts or users
 
  ## UML Diagram
-![masterpice backend UML](https://i.ibb.co/zXSwMCT/uml12-drawio.png)
+![masterpice backend UML](https://i.ibb.co/f1ZG46k/Untitled-Diagram-Page-2-drawio.png)
 
 ## ER Diagram
 ![masterpice backend UML](https://i.ibb.co/hc3nHDh/uml12-drawio-1.png)
