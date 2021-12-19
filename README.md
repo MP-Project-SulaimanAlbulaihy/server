@@ -115,26 +115,28 @@ or delete posts
 
 | HTTP Method | URL                | Request Body                               | Success status  | Error status  | Description       |
 | ----------- | ------------------ | ----------------------------------------- | --------------- | ------------- | ------------------ |
-| POST        | `/signUp`          | {email, password}                         | 200             | 404           | Checks if fields not empty and user not exists, then create user with encrypted password, and store user in session   |
-| POST        | `/login`           | {userName, email, password}               | 201             | 404           | Checks if fields not empty  and user not exists, and if password matches (404), then stores user in session           |
-| POST        | `/logout`          | {empty}                                   | 204             | 400           | logout the user               |
-| GET         | `/getAllUsers`     |                                           | 200             | 400           | Get all users                 |
-| POST        | `/addPost`         | {title, img, desc, duration} | 201             | 400           | service provider create posts|
-| PUT         | `/updPost`         | {title, img, desc}              | 200             | 400           | service provider edit post                   |
-| DELETE      | `/delPost`         | {empty}                                   | 200             | 400           | service provider delete post               |
-| GET         | `/getAllPosts`     |                                           | 200             | 400           | all get all posts         |
-| GET         | `/getOnePost`      |  {id}                                     | 200             | 400           | all get one post by id    |
-| POST        | `/createRole`      |  {role, permission}                       | 201             | 404           | create role (admin, service provider, users|
-| GET         | `/getRoles`        |                                           | 200             | 400           | admin get all roles    |
-| POST        | `/addAppointment`  | {Date, user, isDel}                       | 201             | 400           | add appointment   |
-| PUT         | `/updAppointment`  | {id}                                      | 200             | 400           | update appointment   | 
-| DELETE      | `/delAppointment`  | {id}                                      | 200             | 400           | delete appointment   | 
-| GET         | `/getAppointment`  |                                           | 200             | 400           | service provider get appointment   | 
-| POST        | `/addInquiry`      | {title, description, Date}                | 201             | 404           | All add inquiry or quistion   | 
-| PUT         | `/updInquiry`      |   {title, description}                    | 200             | 400           |  update  inquiry or quistion   | 
-| DELETE      | `/delInquiry`      |   {id}                                    | 200             | 400           |  delete  inquiry or quistion   | 
-| GET         | `/getInquiries`    |                                           | 200             | 400           |  Get all inquiry or quistion   | 
-| GET         | `/getOneInquiry`   |   {id}                                    | 200             | 400           |  Get one inquiry or quistion by id   | 
+| POST        | `/signUp`          | {email, mobile, password, location} | 200  | 404  | Register a new user   |
+| POST        | `/login`           | {username, mobile, password}| 201             | 404           | Log in a user|
+| POST        | `/logout`          | {empty}  | 204             | 400           | Logout the user               |
+| GET         | `/getUsers`     |   {empty}    | 200             | 400           | Get all users                 |
+ | DELETE         | `/user`     |    {empty}        | 200             | 400           | Delete user                 |
+  | POST         | `/singup_admin`    |  {empty}| 200             | 400           | Sing up for new admin user                 |
+| POST        | `/post`         | {title, img, desc, duration} | 201             | 400           | Add new post|
+| PUT         | `/post`         | {title, img, desc, duration}| 200             | 400           | Update post                   |
+| DELETE      | `/post`         | {empty}   | 200             | 400           |  Delete post               |
+| GET         | `/posts`     |{empty} | 200             | 400           | Get all posts         |
+| GET         | `/post/:id`      |  {id}  | 200             | 400           | Get one post by id    |
+ | GET        | `/comments`  |{empty}| 201             | 400           | Get all comments for certain post   |
+| POST        | `/comment`  | {comment}                       | 201             | 400           | Add new comment   |
+| PUT         | `/comment`  | {id}       | 200             | 400           | Update comment   | 
+| DELETE      | `/comment`  | {id}         | 200             | 400           | Delete comment   | 
+| POST        | `/addFavourite/:id`| {user}                | 201             | 404           | Add post to favourite   | 
+| DELETE         | `/removeFavourite/:id`      |   {user}  | 200             | 400           |  Delete post from favourite   | 
+| POST         | `/newNotification`    |  {post, user} | 200             | 400           |  Create new notification   | 
+ | DELETE      | `/deleteOneNotification`      |   {id}    | 200             | 400           |  Delete one notification   | 
+| DELETE         | `/clearNotification`   |   {user} | 200       | 400           |    Delete all notification   | 
+| POST         | `/requestBorrow`    |  {post, user} | 200             | 400           |  Request to borrow an item   | 
+| POST         | `/acceptBorrow`    |  {post, user} | 200             | 400           |  Accept to lend an item   | 
 
  ## UML Diagram
 ![masterpice backend UML](https://i.ibb.co/f1ZG46k/Untitled-Diagram-Page-2-drawio.png)
