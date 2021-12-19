@@ -16,7 +16,6 @@
  - see my profile and can edit profile
  - see hisory of items borrowed and pending items for borrowing and already in use.
  - see requestus if any of people want to borrow
- - 
 ##### As "admin" of "Borrow Something Website": 
 I can see users and posts and messages of people, and block users if needed
 or delete posts
