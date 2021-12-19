@@ -43,19 +43,7 @@ or delete posts
 
 ## Models
 - User model
-| key        | type            | options          | default value |
-| ---------- | --------------- | ---------------- | ------------- |
-| name       | String          | required, unique | n/a           |
-| email      | String          | required, unique | n/a           |
-| password   | String          | required         | n/a           |
-| roles      | Schema <roles>  | required         | n/a           |
-| isBocked   | Boolean         |                  | false         |
-| headline   | String          |                  | n/a           |
-| about      | String          |                  | n/a           |
-| course     | Schema <course> |                  | n/a           |
-| enrole     | Schema <course> |                  | N/A           |
-| lessons    | Array           |                  | N/A           |
-| isVerified | Boolean         |                  | false         |
+
 
 
 | key        | type            | options          | default value |
@@ -71,6 +59,7 @@ or delete posts
 | timestamp    | true           |     N/A    | N/A   |
 
 - Post model
+ 
 | key         | type              | options  | default value |
 | ----------- | ----------------- | -------- | ------------- |
 | title       | String            | required | N/A      |
@@ -82,10 +71,11 @@ or delete posts
 | rating    | Number            | N/A | N/A         |
 | comment    | Schema <Comment>  |   N/A    | N/A     |
 | like     | Schema <Like>   |    N/A   | N/A          |
-| img   | String|          | N/A           |
+| img   | String|     N/A     | N/A           |
 | isDeleted    | Boolean           |    N/A      | false         |
 
 - comments model
+ 
 | key         | type            | options  | default value |
 | ----------- | --------------- | -------- | ------------- |
 | user     | Schema <user>   | required | N/A           |
@@ -94,6 +84,7 @@ or delete posts
 | timestamp    | true         |    N/A      | N/A         |
 
 - favourite model
+ 
 | key         | type            | options  | default value |
 | ----------- | --------------- | -------- | ------------- |
 | user     | Schema <User>   | required | N/A          |
@@ -101,6 +92,7 @@ or delete posts
 | timestamp      | true          | N/A | N/A           |
 
 - Like model
+ 
 | key         | type            | options  | default value |
 | ----------- | --------------- | -------- | ------------- |
 | user     | Schema <User>   | required | N/A          |
@@ -108,6 +100,7 @@ or delete posts
 | timestamp    | true         |     N/A     | N/A         |
 
 - Chat model
+ 
 | key      | type             | options  | default value |
 | -------- | ---------------- | -------- | ------------- |
 | user    | Schema <User>    | required | N/A           |
