@@ -1,4 +1,13 @@
 # Master-Piece-backend
+"Borrow something", a website for borrowing things where the user can publish his items and reserve items to borrow,
+and this website should be based on his location as he can only borrow if he is a neighbor to the poster and much more..
+
+Deployment: https://Deployment.com //Later on  <br/>
+Local: http://localhost:3000 <br/>
+Slides: https://Slides  //Later on
+
+## Trello: 
+[https://trello.com/b/1qm6ACeN/master-piece-project](https://trello.com/b/1qm6ACeN/master-piece-project)
 
 
 ## User Story
@@ -25,12 +34,6 @@ or delete posts
  - navigate to other pages and different categories
  - able to edit/delete all posts or users
 
- ## UML Diagram
-![masterpice backend UML](https://i.ibb.co/f1ZG46k/Untitled-Diagram-Page-2-drawio.png)
-
-## ER Diagram
-![masterpice backend UML](https://i.ibb.co/hc3nHDh/uml12-drawio-1.png)
-
 ## Used Library
 - express
 - cors
@@ -42,8 +45,6 @@ or delete posts
 
 ## Models
 - User model
-
-
 
 | key        | type            | options          | default value |
 | ---------- | --------------- | ---------------- | ------------- |
@@ -106,6 +107,10 @@ or delete posts
 | messages | array of objects | required | N/A           |
  
  
+ ## ER Diagram
+![masterpice backend UML](https://i.ibb.co/hc3nHDh/uml12-drawio-1.png)
+
+ 
  ## Routes
 
 | HTTP Method | URL                | Request Body                               | Success status  | Error status  | Description       |
@@ -131,7 +136,5 @@ or delete posts
 | GET         | `/getInquiries`    |                                           | 200             | 400           |  Get all inquiry or quistion   | 
 | GET         | `/getOneInquiry`   |   {id}                                    | 200             | 400           |  Get one inquiry or quistion by id   | 
 
-
- 
-## Trello: 
-[https://trello.com/b/1qm6ACeN/master-piece-project](https://trello.com/b/1qm6ACeN/master-piece-project)
+ ## UML Diagram
+![masterpice backend UML](https://i.ibb.co/f1ZG46k/Untitled-Diagram-Page-2-drawio.png)
