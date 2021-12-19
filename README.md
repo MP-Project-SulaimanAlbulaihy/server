@@ -30,7 +30,7 @@ or delete posts
 ![masterpice backend UML](https://i.ibb.co/zXSwMCT/uml12-drawio.png)
 
 ## ER Diagram
-![masterpice backend UML](https://i.ibb.co/zXSwMCT/uml12-drawio.png)
+![masterpice backend UML](https://i.ibb.co/hc3nHDh/uml12-drawio-1.png)
 
 ## Trello: 
 [https://trello.com/b/1qm6ACeN/master-piece-project](https://trello.com/b/1qm6ACeN/master-piece-project)
