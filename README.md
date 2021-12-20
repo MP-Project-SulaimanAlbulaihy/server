@@ -5,6 +5,7 @@ and this website should be based on his location as he can only borrow if he is 
 Deployment: https://Deployment.com //Later on  <br/>
 Local: http://localhost:3000 <br/>
 Slides: https://Slides  //Later on
+frontend: https://github.com/MP-Project-SulaimanAlbulaihy/client
 
 ## Trello: 
 [https://trello.com/b/1qm6ACeN/master-piece-project](https://trello.com/b/1qm6ACeN/master-piece-project)
