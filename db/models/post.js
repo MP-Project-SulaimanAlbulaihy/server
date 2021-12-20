@@ -2,12 +2,16 @@ const mongoose = require("mongoose");
 
 const post = new mongoose.Schema(
   {
+    title: { type: String, required: true },
     desc: { type: String, required: true },
-    img: { type: String },
+    category: { type: String, default: "others" },
+    duration: { type: Number, required: true },
+    img: [{ type: String }],
     isDeleted: { type: Boolean, default: false },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     comment: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment"}],
     like: [{ type: mongoose.Schema.Types.ObjectId, ref: "Like"}],
+    favourite: [{ type: mongoose.Schema.Types.ObjectId, ref: "Favourite"}],
   },
   { timestamps: true }
 );
