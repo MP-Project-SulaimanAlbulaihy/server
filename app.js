@@ -5,19 +5,15 @@ require("./db");
 
 const app = express();
 app.use(express.json());
-app.use(
-    cors({credentials: true, origin: true, methods: "GET,POST,PUT,DELETE",}) 
-);
-
+app.use(cors());
 
 const userRouter = require("./routers/routes/user");
 const postRouter = require("./routers/routes/post");
 const commentRouter = require("./routers/routes/comment");
 
-
 app.use(userRouter);
-// app.use(postRouter);
-// app.use(commentRouter);
+app.use(postRouter);
+app.use(commentRouter);
 
 const PORT = process.env.PORT || 5500;
 app.listen(PORT, () => {
