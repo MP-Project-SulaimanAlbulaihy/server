@@ -38,8 +38,8 @@ const getPost = async (req, res) => {
 };
 
 const createPost = (req, res) => {
-  const { title, desc, img, category, duration } = req.body;
-  const newPost = new postModel({ title, desc, img, category, duration, user: req.token.id });
+  const { title, desc, img, category, duration, status } = req.body;
+  const newPost = new postModel({ title, desc, img, category, duration, status });
   if (!(title && desc)) {
     res.json({ error: "Please fill the title and description" });
   } else {
