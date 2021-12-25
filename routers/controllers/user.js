@@ -6,7 +6,7 @@ const login = (req, res) => {
   const { mobileOrUsername, password } = req.body;
   const SECRET_KEY = process.env.SECRET_KEY;
   if (!(mobileOrUsername && password)) {
-    res.status(200).json({ msg: "Kindly fill all inputs" });
+    res.status(200).json( "Kindly fill all inputs");
   } else {
     userModel
       .findOne({ $or: [{ username:mobileOrUsername }, { mobile:mobileOrUsername }] })
