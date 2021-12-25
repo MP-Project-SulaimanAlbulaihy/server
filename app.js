@@ -2,10 +2,14 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 require("./db");
+const morgan = require('morgan')
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(morgan('dev'));
+app.use(
+  cors({credentials: true, origin: true, methods: "GET,POST,PUT,DELETE",}) 
+);
 
 const userRouter = require("./routers/routes/user");
 const postRouter = require("./routers/routes/post");

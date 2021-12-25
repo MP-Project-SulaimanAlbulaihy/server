@@ -2,6 +2,7 @@ const postModel = require("../../db/models/post");
 const likeModel = require("../../db/models/like");
 const favouriteModel = require("../../db/models/favourite");
 const userModel = require("./../../db/models/user");
+const borrowModel = require("./../../db/models/borrow");
 
 const getPosts = (req, res) => {
   postModel
@@ -38,8 +39,8 @@ const getPost = async (req, res) => {
 };
 
 const createPost = (req, res) => {
-  const { title, desc, img, category, duration } = req.body;
-  const newPost = new postModel({ title, desc, img, category, duration, user: req.token.id });
+  const { title, desc, img, category, duration, status } = req.body;
+  const newPost = new postModel({ title, desc, img, category, duration, status, user: req.token.id });
   if (!(title && desc)) {
     res.json({ error: "Please fill the title and description" });
   } else {
@@ -192,6 +193,142 @@ const addFavourite = async (req, res) => {
     });
 };
 
+const borrowItem = (req, res) => {
+  const { id } = req.params;
+  const { note, poster_id, status } = req.body;
+
+  borrowModel
+    .findOne({ post: id, user: req.token.id })
+    .populate("post")
+    .then((result) => {
+      if (result) {
+        res.status(200).json("You have already requested this item, Check your profile page for updates");
+      } else {
+        if (status == "post") {
+          const newBorrowRequest = new borrowModel({
+            post: id,
+            note,
+            status: "pending",
+            poster_id,
+            user: req.token.id,
+          });
+          newBorrowRequest
+            .save()
+            .then((result) => {
+              res.status(201).json(result);
+            })
+            .catch((err) => {
+              res.status(200).json(err);
+            });
+        }
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
+
+const getBorrow = async (req, res) => {
+  const { id } = req.params;
+
+  borrowModel
+    .findOne({ post: id, user: req.token.id })
+    .then((result) => {
+      if (result) {
+        res.status(200).json(true);
+      } else {
+        res.status(200).json(false);
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
+
+const waitingApproval = async (req, res) => {
+  borrowModel
+    .find({ user: req.token.id })
+    .populate("post")
+    .then((result) => {
+      if (result.length) {
+        res.status(200).json(result);
+      } else {
+        res.status(200).json("No Result");
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
+
+const waitingAcceptance = async (req, res) => {
+  borrowModel
+    .find({ status: "pending", poster_id: req.token.id })
+    .populate("post")
+    .then((result) => {
+      if (result.length) {
+        res.status(200).json(result);
+      } else {
+        res.status(200).json("No Result");
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
+
+const accept = async (req, res) => {
+  const { id } = req.body;
+
+  borrowModel
+    .findByIdAndUpdate(id, { status: "accepted" })
+    .populate("post")
+    .then((result) => {
+      if (result) {
+        res.status(200).json("Accepted");
+      } else {
+        res.status(200).json("Error");
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
+
+const borrowedNow = async (req, res) => {
+  borrowModel
+    .find({ status: "accepted", user: req.token.id })
+    .populate("post")
+    .then((result) => {
+      if (result.length) {
+        res.status(200).json(result);
+      } else {
+        res.status(200).json("No Result");
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
+
+const myPosts = async (req, res) => {
+    console.log(req.token.id);
+    postModel
+      .find({ user: req.token.id })
+    //   .populate("post")
+      .then((result) => {
+          console.log(result);
+        if (result.length) {
+          res.status(200).json(result);
+        } else {
+          res.status(200).json("No Result");
+        }
+      })
+      .catch((err) => {
+        res.status(200).json(err);
+      });
+  };
+
 module.exports = {
   getPosts,
   getPost,
@@ -200,4 +337,11 @@ module.exports = {
   updatePost,
   giveLikeOrRemove,
   addFavourite,
+  borrowItem,
+  getBorrow,
+  waitingApproval,
+  waitingAcceptance,
+  accept,
+  borrowedNow,
+  myPosts,
 };
