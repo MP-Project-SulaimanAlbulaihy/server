@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "\"Borrow something\", a website for borrowing things where the user can publish his items and reserve items to borrow, and this website should be based on his location as he can only borrow if he is a neighbor to the poster and much more..",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MP-Project-SulaimanAlbulaihy/server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MP-Project-SulaimanAlbulaihy/server/issues"
+  },
+  "homepage": "https://github.com/MP-Project-SulaimanAlbulaihy/server#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.2",
+    "morgan": "^1.10.0"
+  }
+}
