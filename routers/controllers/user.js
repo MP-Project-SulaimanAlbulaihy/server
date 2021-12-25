@@ -6,10 +6,10 @@ const login = (req, res) => {
   const { mobileOrUsername, password } = req.body;
   const SECRET_KEY = process.env.SECRET_KEY;
   if (!(mobileOrUsername && password)) {
-    res.status(200).json( "Kindly fill all inputs");
+    res.status(200).json("Kindly fill all inputs");
   } else {
     userModel
-      .findOne({ $or: [{ username:mobileOrUsername }, { mobile:mobileOrUsername }] })
+      .findOne({ $or: [{ username: mobileOrUsername }, { mobile: mobileOrUsername }] })
       .then(async (result) => {
         if (result) {
           if (mobileOrUsername === result.mobile || mobileOrUsername === result.username) {
@@ -125,4 +125,9 @@ const logout = (req, res) => {
   //use redis to blacklist token
 };
 
-module.exports = { register, login, logout, registerForAdmin };
+const isTokenExpired = (req, res) => {
+  const { token } = req.body;
+  res.status(200).json(Date.now() >= JSON.parse(atob(token.split(".")[1])).exp * 1000);
+};
+
+module.exports = { register, login, logout, registerForAdmin, isTokenExpired };

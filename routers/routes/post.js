@@ -14,6 +14,7 @@ const {
   accept,
   borrowedNow,
   myPosts,
+  myOffers,
 } = require("./../controllers/post");
 const auth = require("../auth");
 
@@ -33,5 +34,6 @@ postRouter.get("/waiting_acceptance", auth, waitingAcceptance);
 postRouter.post("/accept_borrow", auth, accept);
 postRouter.get("/already_borrowed", auth, borrowedNow);
 postRouter.get("/my_posts", auth, myPosts);
+postRouter.get("/my_offers", auth, myOffers);
 
 module.exports = postRouter;
