@@ -3,16 +3,16 @@ const bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 
 const login = (req, res) => {
-  const { username, mobile, password } = req.body;
+  const { mobileOrUsername, password } = req.body;
   const SECRET_KEY = process.env.SECRET_KEY;
-  if (!((mobile || username) && password)) {
-    res.status(200).json({ msg: "Kindly fill all inputs" });
+  if (!(mobileOrUsername && password)) {
+    res.status(200).json( "Kindly fill all inputs");
   } else {
     userModel
-      .findOne({ $or: [{ username }, { mobile }] })
+      .findOne({ $or: [{ username:mobileOrUsername }, { mobile:mobileOrUsername }] })
       .then(async (result) => {
         if (result) {
-          if (mobile === result.mobile || username === result.username) {
+          if (mobileOrUsername === result.mobile || mobileOrUsername === result.username) {
             const payload = {
               id: result._id,
               role: result.role,
