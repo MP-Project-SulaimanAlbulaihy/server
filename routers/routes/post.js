@@ -7,14 +7,6 @@ const {
   deletePost,
   giveLikeOrRemove,
   addFavourite,
-  borrowItem,
-  getBorrow,
-  waitingApproval,
-  waitingAcceptance,
-  accept,
-  borrowedNow,
-  myPosts,
-  myOffers,
 } = require("./../controllers/post");
 const auth = require("../auth");
 
@@ -27,13 +19,5 @@ postRouter.put("/post/:id", auth, updatePost);
 postRouter.delete("/post/:id", auth, deletePost);
 postRouter.post("/like/:id", auth, giveLikeOrRemove);
 postRouter.post("/favourite/:id", auth, addFavourite);
-postRouter.post("/borrow/:id", auth, borrowItem);
-postRouter.get("/get_borrow/:id", auth, getBorrow);
-postRouter.get("/waiting_approval", auth, waitingApproval);
-postRouter.get("/waiting_acceptance", auth, waitingAcceptance);
-postRouter.post("/accept_borrow", auth, accept);
-postRouter.get("/already_borrowed", auth, borrowedNow);
-postRouter.get("/my_posts", auth, myPosts);
-postRouter.get("/my_offers", auth, myOffers);
 
 module.exports = postRouter;
