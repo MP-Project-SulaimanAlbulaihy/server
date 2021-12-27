@@ -35,7 +35,7 @@ const borrowItem = (req, res) => {
     });
 };
 
-const getBorrow = async (req, res) => {
+const getBorrow = (req, res) => {
   const { id } = req.params;
 
   borrowModel
@@ -52,7 +52,7 @@ const getBorrow = async (req, res) => {
     });
 };
 
-const waitingApproval = async (req, res) => {
+const waitingApproval = (req, res) => {
   borrowModel
     .find({ status: "pending", user: req.token.id })
     .populate("post")
@@ -68,7 +68,7 @@ const waitingApproval = async (req, res) => {
     });
 };
 
-const waitingAcceptance = async (req, res) => {
+const waitingAcceptance = (req, res) => {
   borrowModel
     .find({ status: "pending", poster_id: req.token.id })
     .populate("post")
@@ -84,7 +84,7 @@ const waitingAcceptance = async (req, res) => {
     });
 };
 
-const accept = async (req, res) => {
+const accept = (req, res) => {
   const { id } = req.body;
 
   borrowModel
@@ -102,7 +102,7 @@ const accept = async (req, res) => {
     });
 };
 
-const borrowedNow = async (req, res) => {
+const borrowedNow = (req, res) => {
   borrowModel
     .find({ status: "accepted", user: req.token.id })
     .populate("post")
@@ -118,7 +118,7 @@ const borrowedNow = async (req, res) => {
     });
 };
 
-const myPosts = async (req, res) => {
+const myPosts = (req, res) => {
   postModel
     .find({ user: req.token.id })
     .then((result) => {
@@ -133,7 +133,7 @@ const myPosts = async (req, res) => {
     });
 };
 
-const myOffers = async (req, res) => {
+const myOffers = (req, res) => {
   borrowModel
     .find({ user: req.token.id })
     .populate("post")

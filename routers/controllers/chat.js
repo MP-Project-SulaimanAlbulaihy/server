@@ -1,9 +1,10 @@
 const chatModel = require("./../../db/models/chat");
+const chatToModel = require("./../../db/models/chatTo");
 
 const getUserHistory = (req, res) => {
   chatModel
     .find({ from: req.token.id })
-    .populate("to")
+    .populate("userHistory to from")
     .then((result) => {
       if (result) {
         res.status(200).send(result);
@@ -34,4 +35,21 @@ const updateUserHistory = (req, res) => {
     });
 };
 
-module.exports = { getUserHistory, updateUserHistory };
+const addMessage = (from, to, message) => {  
+    const options = {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true,
+    };
+    chatToModel
+      .findOneAndUpdate({ to: to }, { $push: { content: message } }, options)
+      .then((result) => {
+        chatModel
+        .findOneAndUpdate({ from: from }, { $addToSet: { to: result._id } }, options)
+      })
+      .catch((err) => {
+        console.log('errr ', err);
+      });
+  };
+
+module.exports = { getUserHistory, updateUserHistory, addMessage };

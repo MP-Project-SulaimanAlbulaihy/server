@@ -19,12 +19,12 @@ const getPosts = (req, res) => {
     });
 };
 
-const getPost = async (req, res) => {
+const getPost = (req, res) => {
   const { id } = req.params;
 
   postModel
     .find({ _id: id, isDeleted: false })
-    .populate({ path: "user comment like", match: { isDeleted: false } })
+    .populate({ path: "user comment like favourite", match: { isDeleted: false } })
     .then((result) => {
       if (result) {
         res.status(200).json(result);
@@ -54,7 +54,7 @@ const createPost = (req, res) => {
   }
 };
 
-const deletePost = async (req, res) => {
+const deletePost = (req, res) => {
   const { id } = req.params;
   const { user } = req.body;
 
@@ -98,44 +98,7 @@ const updatePost = (req, res) => {
   }
 };
 
-const giveLikeOrRemove = async (req, res) => {
-  const { id } = req.params;
-  likeModel
-    .findOne({ user: req.token.id, post: id })
-    .then((found) => {
-      if (found) {
-        likeModel
-          .findOneAndDelete({ user: req.token.id, post: id })
-          .then((data) => {
-            postModel
-              .findByIdAndUpdate(id, { $pull: { like: data._id } })
-              .then(() => {
-                res.status(201).json({ result: "removeLike" });
-              })
-              .catch((err) => {
-                res.status(400).json(err);
-              });
-          })
-          .catch((err) => {
-            res.status(400).json(err);
-          });
-      } else {
-        const newLike = new likeModel({
-          user: req.token.id,
-          post: id,
-        });
-        newLike.save().then((result) => {
-          postModel.findByIdAndUpdate(id, { $push: { like: result._id } });
-          res.status(201).json({ result: "newLike" });
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
-};
-
-const addFavourite = async (req, res) => {
+const addFavourite = (req, res) => {
   const { id } = req.params;
   favouriteModel
     .findOne({ user: req.token.id, post: id })
@@ -175,7 +138,7 @@ const addFavourite = async (req, res) => {
               userModel
                 .findByIdAndUpdate(req.token.id, { $push: { favourite: result._id } })
                 .then(() => {
-                  res.status(201).json("added favourite");
+                  res.status(201).json({ result: "added favourite" });
                 })
                 .catch((err) => {
                   res.status(400).json(err);
@@ -192,6 +155,14 @@ const addFavourite = async (req, res) => {
     });
 };
 
+const getFavouritePosts = (req, res) => {
+  favouriteModel
+    .find({ user: req.token.id }).populate('post')
+    .then((data) => {
+      res.status(201).json(data);
+    })
+    .catch((err) => res.status(400).json(err));
+};
 
 module.exports = {
   getPosts,
@@ -199,6 +170,6 @@ module.exports = {
   createPost,
   deletePost,
   updatePost,
-  giveLikeOrRemove,
   addFavourite,
+  getFavouritePosts,
 };

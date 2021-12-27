@@ -10,6 +10,7 @@ const login = (req, res) => {
   } else {
     userModel
       .findOne({ $or: [{ username: mobileOrUsername }, { mobile: mobileOrUsername }] })
+      .populate("favourite")
       .then(async (result) => {
         if (result) {
           if (mobileOrUsername === result.mobile || mobileOrUsername === result.username) {
@@ -127,7 +128,7 @@ const logout = (req, res) => {
 
 const isTokenExpired = (req, res) => {
   const { token } = req.body;
-  res.status(200).json(Date.now() >= JSON.parse(atob(token.split(".")[1])).exp * 1000)
+  res.status(200).json(Date.now() >= JSON.parse(atob(token.split(".")[1])).exp * 1000);
 };
 
 module.exports = { register, login, logout, registerForAdmin, isTokenExpired };
