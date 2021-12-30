@@ -6,10 +6,11 @@ const login = (req, res) => {
   const { mobileOrUsername, password } = req.body;
   const SECRET_KEY = process.env.SECRET_KEY;
   if (!(mobileOrUsername && password)) {
-    res.status(200).json( "Kindly fill all inputs");
+    res.status(200).json("Kindly fill all inputs");
   } else {
     userModel
-      .findOne({ $or: [{ username:mobileOrUsername }, { mobile:mobileOrUsername }] })
+      .findOne({ $or: [{ username: mobileOrUsername }, { mobile: mobileOrUsername }] })
+      .populate("favourite")
       .then(async (result) => {
         if (result) {
           if (mobileOrUsername === result.mobile || mobileOrUsername === result.username) {
@@ -125,4 +126,56 @@ const logout = (req, res) => {
   //use redis to blacklist token
 };
 
-module.exports = { register, login, logout, registerForAdmin };
+const isTokenExpired = (req, res) => {
+  const { token } = req.body;
+  res.status(200).json(Date.now() >= JSON.parse(atob(token.split(".")[1])).exp * 1000);
+};
+
+const updateUser = (req, res) => {
+  const { id, currentMobile, username, mobile, password, location } = req.body;
+  userModel.findOne({ username }).then((user) => {
+    if (user?.username == username && req.token.id != id) {
+      res.status(200).json({ err: "username already existed" });
+    } else {
+      userModel.findOne({ mobile }).then(async (user) => {
+        if (user && user?.mobile != currentMobile) {
+          res.status(200).json({ err: "mobile number already existed" });
+        } else {
+          const SALT = Number(process.env.SALT);
+          const hashedPassword = await bcrypt.hash(password, SALT);
+
+          if (password.length >= 8) {
+            userModel
+              .findByIdAndUpdate(req.token.id, { $set: { username, mobile, password: hashedPassword, location } })
+              .then((result) => {
+                res.status(200).json("user info updated");
+              })
+              .catch((err) => {
+                res.status(200).json(err);
+              });
+          } else {
+            userModel
+              .findByIdAndUpdate(req.token.id, { $set: { username, mobile, location } })
+              .then((result) => {
+                res.status(200).json("user info updated");
+              })
+              .catch((err) => {
+                res.status(200).json(err);
+              });
+          }
+        }
+      }).catch(err=>console.log(err));
+    }
+  });
+};
+
+const getUser = (req, res) => {
+  userModel.findById(req.token.id).then((user) => {
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(200).json("user not found");
+    }
+  });
+};
+module.exports = { register, login, logout, registerForAdmin, isTokenExpired, updateUser, getUser };
