@@ -132,7 +132,7 @@ const isTokenExpired = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const { id, currentMobile, username, mobile, password, location } = req.body;
+  const { id, currentMobile, username, mobile, password, location, avatar } = req.body;
   userModel.findOne({ username }).then((user) => {
     if (user?.username == username && req.token.id != id) {
       res.status(200).json({ err: "username already existed" });
@@ -142,11 +142,12 @@ const updateUser = (req, res) => {
           res.status(200).json({ err: "mobile number already existed" });
         } else {
           const SALT = Number(process.env.SALT);
-          const hashedPassword = await bcrypt.hash(password, SALT);
+          let hashedPassword
+          if(password) hashedPassword = await bcrypt.hash(password, SALT);
 
-          if (password.length >= 8) {
+          if (password?.length >= 8) {
             userModel
-              .findByIdAndUpdate(req.token.id, { $set: { username, mobile, password: hashedPassword, location } })
+              .findByIdAndUpdate(req.token.id, { $set: { username, mobile, password: hashedPassword, location, avatar } })
               .then((result) => {
                 res.status(200).json("user info updated");
               })
@@ -155,7 +156,7 @@ const updateUser = (req, res) => {
               });
           } else {
             userModel
-              .findByIdAndUpdate(req.token.id, { $set: { username, mobile, location } })
+              .findByIdAndUpdate(req.token.id, { $set: { username, mobile, location, avatar } })
               .then((result) => {
                 res.status(200).json("user info updated");
               })
