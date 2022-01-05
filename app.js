@@ -15,6 +15,7 @@ const postRouter = require("./routers/routes/post");
 const commentRouter = require("./routers/routes/comment");
 const borrowRouter = require("./routers/routes/borrow");
 const chatRouter = require("./routers/routes/chat");
+const { addMessage } = require("./routers/controllers/chat");
 
 app.use(userRouter);
 app.use(postRouter);
@@ -40,12 +41,14 @@ io.on("connection", (socket) => {
   console.log('connected ');
   socket.on("message", (data) => {
     console.log(data);
+    addMessage(data.from, data.to, data.message)
     users[data.from] = socket.id;
     users[data.to] = socket.id;
-    var socketIdFrom = users[data.from];
+    // var socketIdFrom = users[data.from];
     var socketIdTo = users[data.to];
-    io.to(socketIdFrom).emit("message", data);
+    // io.to(socketIdFrom).emit("message", data);
     io.to(socketIdTo).emit("message", data);
   });
 });
+
 

@@ -5,7 +5,7 @@ const {
   createPost,
   updatePost,
   deletePost,
-  giveLikeOrRemove,
+  getFavouritePosts,
   addFavourite,
 } = require("./../controllers/post");
 const auth = require("../auth");
@@ -17,7 +17,7 @@ postRouter.get("/post/:id", getPost);
 postRouter.post("/post", auth, createPost);
 postRouter.put("/post/:id", auth, updatePost);
 postRouter.delete("/post/:id", auth, deletePost);
-postRouter.post("/like/:id", auth, giveLikeOrRemove);
-postRouter.post("/favourite/:id", auth, addFavourite);
+postRouter.get("/favourite", auth, getFavouritePosts);
+postRouter.get("/favourite/:id", auth, addFavourite);
 
 module.exports = postRouter;
