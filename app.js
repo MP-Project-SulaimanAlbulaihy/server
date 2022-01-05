@@ -31,6 +31,7 @@ const server = app.listen(PORT, () => {
 });
 
 const io = socket(server, { cors: { origin: "*" } });
+<<<<<<< HEAD
 
 io.on("connection", (socket) => {
   console.log("connected ");
@@ -59,3 +60,28 @@ io.on("connection", (socket) => {
     io.emit("message", data);
   });
 });
+=======
+// io.on("connection", (socket) => {
+//   console.log("connection established ");
+//   socket.on("message", ({ from, to, message }) => {
+//     io.emit("message", { from, to, message });
+//   });
+// });
+
+var users = [];
+io.on("connection", (socket) => {
+  console.log('connected ');
+  socket.on("message", (data) => {
+    console.log(data);
+    addMessage(data.from, data.to, data.message)
+    users[data.from] = socket.id;
+    users[data.to] = socket.id;
+    // var socketIdFrom = users[data.from];
+    var socketIdTo = users[data.to];
+    // io.to(socketIdFrom).emit("message", data);
+    io.to(socketIdTo).emit("message", data);
+  });
+});
+
+
+>>>>>>> 8735e530374f5f5b07de0ee53fe424381b7847e4

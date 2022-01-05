@@ -92,6 +92,12 @@ const updatePost = (req, res) => {
       .catch((err) => {
         res.status(400).json(err);
       });
+<<<<<<< HEAD
+=======
+  } else {
+    res.status(200).json("You don't have privileges to remove this post");
+  }
+>>>>>>> 8735e530374f5f5b07de0ee53fe424381b7847e4
 };
 
 const addFavourite = (req, res) => {

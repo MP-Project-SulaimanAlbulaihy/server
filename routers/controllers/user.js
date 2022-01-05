@@ -131,6 +131,7 @@ const isTokenExpired = (req, res) => {
   res.status(200).json(Date.now() >= JSON.parse(atob(token.split(".")[1])).exp * 1000);
 };
 
+<<<<<<< HEAD
 const updateUser = (req, res) => {
   const { id, currentMobile, username, mobile, password, location } = req.body;
   userModel.findOne({ username }).then((user) => {
@@ -179,3 +180,6 @@ const getUser = (req, res) => {
   });
 };
 module.exports = { register, login, logout, registerForAdmin, isTokenExpired, updateUser, getUser };
+=======
+module.exports = { register, login, logout, registerForAdmin, isTokenExpired };
+>>>>>>> 8735e530374f5f5b07de0ee53fe424381b7847e4
