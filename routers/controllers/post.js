@@ -204,23 +204,21 @@ const borrowItem = (req, res) => {
       if (result) {
         res.status(200).json("You have already requested this item, Check your profile page for updates");
       } else {
-        if (status == "post") {
-          const newBorrowRequest = new borrowModel({
-            post: id,
-            note,
-            status: "pending",
-            poster_id,
-            user: req.token.id,
+        const newBorrowRequest = new borrowModel({
+          post: id,
+          note,
+          status: status == "post" ? "pending" : "offer",
+          poster_id,
+          user: req.token.id,
+        });
+        newBorrowRequest
+          .save()
+          .then((result) => {
+            res.status(201).json(result);
+          })
+          .catch((err) => {
+            res.status(200).json(err);
           });
-          newBorrowRequest
-            .save()
-            .then((result) => {
-              res.status(201).json(result);
-            })
-            .catch((err) => {
-              res.status(200).json(err);
-            });
-        }
       }
     })
     .catch((err) => {
@@ -247,7 +245,7 @@ const getBorrow = async (req, res) => {
 
 const waitingApproval = async (req, res) => {
   borrowModel
-    .find({ user: req.token.id })
+    .find({ status: "pending", user: req.token.id })
     .populate("post")
     .then((result) => {
       if (result.length) {
@@ -312,22 +310,35 @@ const borrowedNow = async (req, res) => {
 };
 
 const myPosts = async (req, res) => {
-    console.log(req.token.id);
-    postModel
-      .find({ user: req.token.id })
-    //   .populate("post")
-      .then((result) => {
-          console.log(result);
-        if (result.length) {
-          res.status(200).json(result);
-        } else {
-          res.status(200).json("No Result");
-        }
-      })
-      .catch((err) => {
-        res.status(200).json(err);
-      });
-  };
+  postModel
+    .find({ user: req.token.id })
+    .then((result) => {
+      if (result.length) {
+        res.status(200).json(result);
+      } else {
+        res.status(200).json("No Result");
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
+
+const myOffers = async (req, res) => {
+  borrowModel
+    .find({ user: req.token.id })
+    .populate("post")
+    .then((result) => {
+      if (result.length) {
+        res.status(200).json(result);
+      } else {
+        res.status(200).json("No Result");
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
 
 module.exports = {
   getPosts,
@@ -344,4 +355,5 @@ module.exports = {
   accept,
   borrowedNow,
   myPosts,
+  myOffers,
 };
