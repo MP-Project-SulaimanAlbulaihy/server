@@ -31,41 +31,31 @@ const server = app.listen(PORT, () => {
 });
 
 const io = socket(server, { cors: { origin: "*" } });
-// io.on("connection", (socket) => {
-//   console.log("connection established ");
-//   socket.on("message", ({ from, to, message }) => {
-//     io.emit("message", { from, to, message });
-//   });
-// });
 
-// var users = {};
-// io.on("connection", (socket) => {
-//   console.log('connected ');
-//   socket.on("message", (data) => {
-//     console.log(users);
-//     users[data.to] = socket.id;
-//     console.log(users[data.to]);
-//     // addMessage(data.from, data.to, data.message)
-//     io.to(users[data.to]).emit("message", data);
-//   });
-// });
-
-let room;
 io.on("connection", (socket) => {
   console.log("connected ");
+
+  socket.on("joined", (data) => {
+    console.log("joined");
+
+    chatRoomsModel
+      .findOneAndUpdate(
+        { $or: [{ $and: [{ from: data.from }, { to: data.to }] }, { $and: [{ from: data.to }, { to: data.from }] }] },
+        { from: data.from, to: data.to },
+        { upsert: true, new: true }
+      )
+      .then((result) => {
+        if (result) {
+          console.log("joined", result._id);
+          room = result._id;
+          socket.join(result._id);
+        }
+      })
+      .catch((err) => console.log(err));
+  });
+
   socket.on("message", (data) => {
-    chatRoomsModel.findOne({ $or: [ {$and: [{from: data.from}, {to: data.to}]}, {$and: [{from: data.to}, {to: data.from}]} ]}).then((result) => {
-      if (result) {
-        room = result._id
-        console.log(room);
-      } else {
-        chatRoomsModel.findOneAndUpdate({ $and: [{from: data.from}, {to: data.to}]}, { from: data.from, to: data.to }, { upsert: true }).then((result) => {
-          room = result._id
-          console.log(room);
-        }).catch(err=>console.log(err));
-      }
-    }).catch(err=>console.log(err));
-    
-    // io.to(users[data.to]).emit("message", data);
+    addMessage(data.from, data.to, data.message, data.username);
+    io.emit("message", data);
   });
 });

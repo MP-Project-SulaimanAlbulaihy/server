@@ -1,10 +1,25 @@
 const chatModel = require("./../../db/models/chat");
-const chatToModel = require("./../../db/models/chatTo");
+const userHistory = require("../../db/models/userHistory");
+
+const getUserChat = (req, res) => {
+  chatModel
+    .find({ $or: [{from: req.token.id}, {to:req.token.id}] })
+    .then((result) => {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(200).json("no chats found");
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
 
 const getUserHistory = (req, res) => {
-  chatModel
-    .find({ from: req.token.id })
-    .populate("userHistory to from")
+  userHistory
+    .find({ user: req.token.id })
+    .populate("userHistory")
     .then((result) => {
       if (result) {
         res.status(200).send(result);
@@ -18,15 +33,15 @@ const getUserHistory = (req, res) => {
 };
 
 const updateUserHistory = (req, res) => {
-  const { userHistory } = req.body;
+  const { newUser } = req.body;
 
   const options = {
     upsert: true,
     new: true,
     setDefaultsOnInsert: true,
   };
-  chatModel
-    .findOneAndUpdate({ from: req.token.id }, { $addToSet: { userHistory } }, options)
+  userHistory
+    .findOneAndUpdate({ user: req.token.id }, { $addToSet: { userHistory:newUser } }, options)
     .then((result) => {
       res.status(200).json(result);
     })
@@ -35,21 +50,20 @@ const updateUserHistory = (req, res) => {
     });
 };
 
-const addMessage = (from, to, message) => {  
+const addMessage = (from, to, message, username) => {  
     const options = {
       upsert: true,
       new: true,
       setDefaultsOnInsert: true,
     };
-    chatToModel
-      .findOneAndUpdate({ to: to }, { $push: { content: message } }, options)
+    chatModel
+      .findOneAndUpdate({ from: from, to: to, username:username }, { $push: { content: message } }, options)
       .then((result) => {
-        chatModel
-        .findOneAndUpdate({ from: from }, { $addToSet: { to: result._id } }, options)
+        console.log(result);
       })
       .catch((err) => {
         console.log('errr ', err);
       });
   };
 
-module.exports = { getUserHistory, updateUserHistory, addMessage };
+module.exports = { getUserHistory, updateUserHistory, addMessage,getUserChat };
