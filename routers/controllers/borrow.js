@@ -1,6 +1,6 @@
 const postModel = require("../../db/models/post");
 const borrowModel = require("./../../db/models/borrow");
-
+const schedule = require("node-schedule");
 
 const borrowItem = (req, res) => {
   const { id } = req.params;
@@ -11,7 +11,7 @@ const borrowItem = (req, res) => {
     .populate("post")
     .then((result) => {
       if (result) {
-        res.status(200).json("You have already requested this item, Check your profile page for updates");
+        res.status(200).json("لقد طلبت هذه السلعة بالفعل، يرجى متابعة الطلب في الملف الشخصي");
       } else {
         const newBorrowRequest = new borrowModel({
           post: id,
@@ -73,11 +73,7 @@ const waitingAcceptance = (req, res) => {
     .find({ status: "pending", poster_id: req.token.id })
     .populate("post")
     .then((result) => {
-      if (result.length) {
-        res.status(200).json(result);
-      } else {
-        res.status(200).json("No Result");
-      }
+      res.status(200).json(result);
     })
     .catch((err) => {
       res.status(200).json(err);
@@ -85,14 +81,44 @@ const waitingAcceptance = (req, res) => {
 };
 
 const accept = (req, res) => {
-  const { id } = req.body;
+  const { id, postID } = req.body;
 
   borrowModel
     .findByIdAndUpdate(id, { status: "accepted" })
     .populate("post")
     .then((result) => {
       if (result) {
-        res.status(200).json("Accepted");
+        let timer = 0;
+        if (result.post.duration == "دقيقة 30") timer = 1800;
+        else if (result.post.duration == 'ساعة') timer = 3600;
+        else if (result.post.duration == "ساعتين") timer = 7200;
+        else if (result.post.duration == "يوم") timer = 86400;
+        else if (result.post.duration == "يومين") timer = 172800;
+
+        postModel.findByIdAndUpdate(postID, { status: "borrowed" }).then(() => {
+          const time = new Date(Date.now() + timer);
+          const job = schedule.scheduleJob(time, function () {
+            console.log("The answer to life, the universe, and everything!");
+          });
+          res.status(200).json("Accepted");
+        });
+      } else {
+        res.status(200).json("Error");
+      }
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
+const reject = (req, res) => {
+  const { id } = req.body;
+
+  borrowModel
+    .findByIdAndUpdate(id, { status: "rejected" })
+    .populate("post")
+    .then((result) => {
+      if (result) {
+        res.status(200).json("Rccepted");
       } else {
         res.status(200).json("Error");
       }
@@ -158,4 +184,5 @@ module.exports = {
   borrowedNow,
   myPosts,
   myOffers,
+  reject,
 };

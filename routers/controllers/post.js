@@ -5,7 +5,7 @@ const userModel = require("./../../db/models/user");
 
 const getPosts = (req, res) => {
   postModel
-    .find({ isDeleted: false })
+    .find({ isDeleted: false, status: { $ne: "borrowed" } })
     .populate({ path: "user favourite", match: { isDeleted: false } })
     .then((result) => {
       if (result) {
@@ -80,6 +80,7 @@ const updatePost = (req, res) => {
   const { id } = req.params;
   const { title, desc, img, category, duration } = req.body;
 
+<<<<<<< HEAD
     postModel
       .findByIdAndUpdate(id, { $set: { title, desc, img, category, duration } })
       .then((result) => {
@@ -98,6 +99,20 @@ const updatePost = (req, res) => {
     res.status(200).json("You don't have privileges to remove this post");
   }
 >>>>>>> 8735e530374f5f5b07de0ee53fe424381b7847e4
+=======
+  postModel
+    .findByIdAndUpdate(id, { $set: { title, desc, img, category, duration } })
+    .then((result) => {
+      if (req.token.id == result.user || req.token.role == "admin") {
+        res.status(200).json("post updated");
+      } else {
+        res.status(404).json("post does not exist");
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+>>>>>>> Day17
 };
 
 const addFavourite = (req, res) => {
@@ -159,9 +174,19 @@ const addFavourite = (req, res) => {
 
 const getFavouritePosts = (req, res) => {
   favouriteModel
-    .find({ user: req.token.id }).populate('post')
+    .find({ user: req.token.id })
+    .populate("post")
     .then((data) => {
       res.status(201).json(data);
+    })
+    .catch((err) => res.status(400).json(err));
+};
+const deletPost = (req, res) => {
+  const { id } = req.params;
+  postModel
+    .findByIdAndUpdate(id, {isDeleted: true})
+    .then((data) => {
+      res.status(200).json('deleted');
     })
     .catch((err) => res.status(400).json(err));
 };
@@ -174,4 +199,5 @@ module.exports = {
   updatePost,
   addFavourite,
   getFavouritePosts,
+  deletPost,
 };
