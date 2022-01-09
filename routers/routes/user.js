@@ -1,5 +1,6 @@
 const express = require("express");
 const { register, login, logout, registerForAdmin, isTokenExpired, updateUser, getUser, validate } = require("./../controllers/user");
+
 const auth = require("../auth");
 
 const userRouter = express.Router();
