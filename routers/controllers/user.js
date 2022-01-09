@@ -41,7 +41,30 @@ const login = (req, res) => {
   }
 };
 
-const register = (req, res) => {
+const register = async (req, res) => {
+  const { username, mobile, password, location } = req.body;
+
+  console.log(username, mobile, password, location);
+  const SALT = Number(process.env.SALT);
+  const hashedPassword = await bcrypt.hash(password, SALT);
+  const newUser = new userModel({
+    username,
+    mobile,
+    location,
+    password: hashedPassword,
+  });
+
+  newUser
+    .save()
+    .then((result) => {
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      res.status(200).json(err);
+    });
+};
+
+const validate = (req, res) => {
   const { username, mobile, password, location } = req.body;
   let errors = [];
 
@@ -72,23 +95,7 @@ const register = (req, res) => {
           if (errors.length > 0) {
             res.status(200).json(errors);
           } else {
-            const SALT = Number(process.env.SALT);
-            const hashedPassword = await bcrypt.hash(password, SALT);
-            const newUser = new userModel({
-              username,
-              mobile,
-              location,
-              password: hashedPassword,
-            });
-
-            newUser
-              .save()
-              .then((result) => {
-                res.status(201).json(result);
-              })
-              .catch((err) => {
-                res.status(200).json(err);
-              });
+            res.status(200).json("validated");
           }
         }
       });
@@ -137,35 +144,40 @@ const updateUser = (req, res) => {
     if (user?.username == username && req.token.id != id) {
       res.status(200).json({ err: "username already existed" });
     } else {
-      userModel.findOne({ mobile }).then(async (user) => {
-        if (user && user?.mobile != currentMobile) {
-          res.status(200).json({ err: "mobile number already existed" });
-        } else {
-          const SALT = Number(process.env.SALT);
-          let hashedPassword
-          if(password) hashedPassword = await bcrypt.hash(password, SALT);
-
-          if (password?.length >= 8) {
-            userModel
-              .findByIdAndUpdate(req.token.id, { $set: { username, mobile, password: hashedPassword, location, avatar } })
-              .then((result) => {
-                res.status(200).json("user info updated");
-              })
-              .catch((err) => {
-                res.status(200).json(err);
-              });
+      userModel
+        .findOne({ mobile })
+        .then(async (user) => {
+          if (user && user?.mobile != currentMobile) {
+            res.status(200).json({ err: "mobile number already existed" });
           } else {
-            userModel
-              .findByIdAndUpdate(req.token.id, { $set: { username, mobile, location, avatar } })
-              .then((result) => {
-                res.status(200).json("user info updated");
-              })
-              .catch((err) => {
-                res.status(200).json(err);
-              });
+            const SALT = Number(process.env.SALT);
+            let hashedPassword;
+            if (password) hashedPassword = await bcrypt.hash(password, SALT);
+
+            if (password?.length >= 8) {
+              userModel
+                .findByIdAndUpdate(req.token.id, {
+                  $set: { username, mobile, password: hashedPassword, location, avatar },
+                })
+                .then((result) => {
+                  res.status(200).json("user info updated");
+                })
+                .catch((err) => {
+                  res.status(200).json(err);
+                });
+            } else {
+              userModel
+                .findByIdAndUpdate(req.token.id, { $set: { username, mobile, location, avatar } })
+                .then((result) => {
+                  res.status(200).json("user info updated");
+                })
+                .catch((err) => {
+                  res.status(200).json(err);
+                });
+            }
           }
-        }
-      }).catch(err=>console.log(err));
+        })
+        .catch((err) => console.log(err));
     }
   });
 };
@@ -179,4 +191,4 @@ const getUser = (req, res) => {
     }
   });
 };
-module.exports = { register, login, logout, registerForAdmin, isTokenExpired, updateUser, getUser };
+module.exports = { register, login, logout, registerForAdmin, isTokenExpired, updateUser, getUser, validate };
